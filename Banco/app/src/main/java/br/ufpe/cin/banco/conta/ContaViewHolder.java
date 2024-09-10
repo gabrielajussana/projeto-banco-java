@@ -49,30 +49,23 @@ public class ContaViewHolder  extends RecyclerView.ViewHolder {
 
         this.btnEdit.setOnClickListener(
                 v -> {
-                    Toast.makeText(
-                            this.context,
-                            "clicou no botão de editar conta",
-                            Toast.LENGTH_SHORT
-                    ).show();
                     Intent i = new Intent(
                             this.context,
                             EditarContaActivity.class
                     );
                     //Passar o número da conta pelo Intent
-                    i.putExtra("NUMERO_CONTA", c.numero);
+                    i.putExtra(EditarContaActivity.KEY_NUMERO_CONTA, c.numero);
                     this.context.startActivity(i);
                 }
         );
+
         this.btnDelete.setOnClickListener(
                 v -> {
-                    Toast.makeText(
-                            this.context,
-                            "clicou no botão de deletar conta",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    if (viewModel != null) {
-                        viewModel.remover(c);
-                    }
+                    Intent i = new Intent(context, EditarContaActivity.class);
+                    i.putExtra(EditarContaActivity.KEY_NUMERO_CONTA, c.numero);
+                    i.putExtra("remover", true);
+                    Toast.makeText(context, "Conta deletada com sucesso!", Toast.LENGTH_SHORT).show();
+                    context.startActivity(i);
                 }
         );
     }
