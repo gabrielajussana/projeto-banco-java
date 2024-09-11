@@ -1,5 +1,6 @@
 package br.ufpe.cin.banco;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ public class PesquisarActivity extends AppCompatActivity {
     BancoViewModel viewModel;
     ContaAdapter adapter;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +35,32 @@ public class PesquisarActivity extends AppCompatActivity {
         btnPesquisar.setOnClickListener(
                 v -> {
                     String oQueFoiDigitado = aPesquisar.getText().toString();
-                    //TODO implementar a busca de acordo com o tipo de busca escolhido pelo usuário
-                }
-        );
 
-        //TODO atualizar o RecyclerView com resultados da busca na medida que encontrar
+                    int tipoSelecionado = tipoPesquisa.getCheckedRadioButtonId();
 
+                    if (oQueFoiDigitado.isEmpty()) {
+                        // Tratar caso o campo de pesquisa esteja vazio
+                        return;
+                    }
+
+                    // Tratar caso nenhum tipo de pesquisa válido esteja selecionado
+                    if (tipoSelecionado == R.id.peloCPFcliente) {
+                        viewModel.buscarContasPeloCPF(oQueFoiDigitado);
+                    }
+
+                    else if (tipoSelecionado == R.id.peloNomeCliente) {
+                        viewModel.buscarContasPeloNome(oQueFoiDigitado);
+                    }
+
+                    else if (tipoSelecionado == R.id.peloNumeroConta) {
+                        viewModel.buscarContaPeloNumero(oQueFoiDigitado);
+                    }
+
+                });
+
+        viewModel.getContasFiltradas().observe(this, contas -> {
+            adapter.submitList(contas);
+        });
 
     }
 }

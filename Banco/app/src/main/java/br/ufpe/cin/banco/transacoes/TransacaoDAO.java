@@ -7,6 +7,8 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import br.ufpe.cin.banco.conta.Conta;
+
 //Ver anotações TODO no código
 @Dao
 public interface TransacaoDAO {
@@ -19,6 +21,16 @@ public interface TransacaoDAO {
     @Query("SELECT * FROM transacoes ORDER BY dataTransacao DESC")
     LiveData<List<Transacao>> transacoes();
 
-    //TODO incluir métodos para buscar transações pelo (1) número da conta, (2) pela data, filtrando pelo tipo da transação (crédito, débito, ou todas)
+    // Buscar Transação pelo número da conta
+    @Query("SELECT * FROM transacoes WHERE numeroConta = :numeroConta LIMIT 1")
+    Transacao buscarTransacaoPeloNumero(String numeroConta);
+
+    // Buscar Transação pela data
+    @Query("SELECT * FROM transacoes WHERE dataTransacao LIKE '%' || :dataTransacao || '%'")
+    LiveData<List<Transacao>> buscarTransacaoPelaData(String dataTransacao);
+
+    // Filtrar pelo tipo da transação (crédito, débito, ou todas)
+    @Query("SELECT * FROM transacoes WHERE tipoTransacao LIKE '%' || :tipoTransacao || '%'")
+    LiveData<List<Transacao>> filtrarPorTipo(char tipoTransacao);
 
 }

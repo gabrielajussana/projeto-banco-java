@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
-//Ver anotações TODO no código
 public class TransacaoRepository {
     private TransacaoDAO dao;
     private LiveData<List<Transacao>> transacoes;
@@ -24,5 +23,17 @@ public class TransacaoRepository {
         dao.adicionar(t);
     }
 
-    //TODO implementar métodos de busca de transações
+
+    public Transacao buscarTransacaoPeloNumero(String numeroConta) {
+        return dao.buscarTransacaoPeloNumero(numeroConta);
+    }
+
+    public LiveData<List<Transacao>> buscarTransacaoPelaData(String dataTransacao) {
+        return dao.buscarTransacaoPelaData(dataTransacao);
+    }
+
+    public LiveData<List<Transacao>> filtrarPorTipo(char tipoTransacao) {
+        return dao.filtrarPorTipo(tipoTransacao);
+    }
+
 }

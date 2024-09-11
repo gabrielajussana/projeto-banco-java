@@ -45,4 +45,29 @@ public class Conta {
                 ", cpfCliente='" + cpfCliente + '\'' +
                 '}';
     }
+
+    public double getSaldo() {
+        return saldo;
+    }
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    @NonNull
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(@NonNull String nomeCliente) {
+        this.nomeCliente = nomeCliente;
+    }
+
+    @NonNull
+    public String getCpfCliente() {
+        return cpfCliente;
+    }
+
+    public void setCpfCliente(@NonNull String cpfCliente) {
+        this.cpfCliente = cpfCliente;
+    }
 }

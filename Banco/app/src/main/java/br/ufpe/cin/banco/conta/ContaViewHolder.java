@@ -41,7 +41,7 @@ public class ContaViewHolder  extends RecyclerView.ViewHolder {
         this.nomeCliente.setText(c.nomeCliente);
         this.infoConta.setText(c.numero + " | " + "Saldo atual: R$" + NumberFormat.getCurrencyInstance().format(c.saldo));
         //Atualizar a imagem de acordo com o valor do saldo atual
-        if (c.saldo > 0) {
+        if (c.saldo >= 0) {
             this.icone.setImageResource(R.drawable.ok);
         } else {
             this.icone.setImageResource(R.drawable.delete);

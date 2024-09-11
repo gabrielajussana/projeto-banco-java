@@ -44,4 +44,5 @@ public class Transacao {
                 ", dataTransacao='" + dataTransacao + '\'' +
                 '}';
     }
+
 }

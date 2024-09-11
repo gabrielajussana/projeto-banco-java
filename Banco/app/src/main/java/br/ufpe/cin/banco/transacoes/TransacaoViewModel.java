@@ -13,11 +13,13 @@ import java.util.List;
 import br.ufpe.cin.banco.BancoDB;
 import br.ufpe.cin.banco.conta.Conta;
 
-//Ver anotações TODO no código
 public class TransacaoViewModel extends AndroidViewModel {
 
     private TransacaoRepository repository;
     public LiveData<List<Transacao>> transacoes;
+
+    private final MutableLiveData<Transacao> _transacaoAtual = new MutableLiveData<>();
+    public LiveData<Transacao> transacaoAtual = _transacaoAtual;
 
     public TransacaoViewModel(@NonNull Application application) {
         super(application);
@@ -25,8 +27,12 @@ public class TransacaoViewModel extends AndroidViewModel {
         this.transacoes = repository.getTransacoes();
     }
 
-    void inserir(Transacao t) {
+    public void inserir(Transacao t) {
         new Thread(() -> repository.inserir(t)).start();
     }
-    //TODO implementar métodos de busca de transações
+
+    public void buscarTrasacaoPeloNumero(String numeroConta){
+
+    }
+
 }
