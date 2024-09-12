@@ -19,11 +19,17 @@ import br.ufpe.cin.banco.transacoes.Transacao;
 import br.ufpe.cin.banco.transacoes.TransacaoRepository;
 import br.ufpe.cin.banco.transacoes.TransacaoViewModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class BancoViewModel extends AndroidViewModel {
     private ContaRepository contaRepository;
     private TransacaoRepository transacaoRepository;
     private MutableLiveData<List<Conta>> contasFiltradas;
     private Date dataTransacao = new Date();
+
+    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+    String dataFormatada = formato.format(dataTransacao);
     private TransacaoRepository repository;
     private final MutableLiveData<Transacao> _transacaoAtual = new MutableLiveData<>();
     public LiveData<Transacao> transacaoAtual = _transacaoAtual;
@@ -131,7 +137,7 @@ public class BancoViewModel extends AndroidViewModel {
                 conta.setSaldo(novoSaldo);
                 contaRepository.atualizar(conta);
             }
-            Transacao transacao = new Transacao(0, 'D', numeroConta, valor, dataTransacao.toString());
+            Transacao transacao = new Transacao(0, 'D', numeroConta, valor, dataFormatada);
             // Criar um novo TransacaoViewModel se necessário
             TransacaoViewModel transacaoViewModel = new ViewModelProvider.AndroidViewModelFactory(
                     getApplication()).create(TransacaoViewModel.class);
@@ -142,8 +148,7 @@ public class BancoViewModel extends AndroidViewModel {
     void buscarTransacoesPeloNumero(String numeroConta) {
         new Thread(
                 () -> {
-                    Transacao transacao = repository.buscarTransacaoPeloNumero(numeroConta);
-                    _transacaoAtual.postValue(transacao);
+                    LiveData<List<Transacao>> transacao = repository.buscarTransacaoPeloNumero(numeroConta);
                 }
         ).start();
     }

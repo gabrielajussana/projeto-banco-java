@@ -23,6 +23,7 @@ public class TransacaoViewHolder extends RecyclerView.ViewHolder {
     TextView dataTransacao = null;
     Context context = null;
 
+
     public TransacaoViewHolder(@NonNull View linha) {
         super(linha);
         this.tipoTransacao = linha.findViewById(R.id.tipoTransacao);
@@ -35,10 +36,12 @@ public class TransacaoViewHolder extends RecyclerView.ViewHolder {
     void bindTo(Transacao t) {
         if(t.tipoTransacao == 'D') {
             this.valorTransacao.setTextColor(context.getResources().getColor(R.color.red, null));
+        } else {
+            this.valorTransacao.setTextColor(context.getResources().getColor(R.color.green, null));
         }
         this.valorTransacao.setText(String.valueOf(t.valorTransacao));
-        this.numeroConta.setText(t.numeroConta);
-        this.dataTransacao.setText(t.dataTransacao.toString());
+        this.numeroConta.setText("Número da Conta: " + t.numeroConta);
+        this.dataTransacao.setText(t.dataTransacao);
 
     }
 }
