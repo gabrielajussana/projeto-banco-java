@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class TransacaoRepository {
-    private TransacaoDAO dao;
-    private LiveData<List<Transacao>> transacoes;
+    private final TransacaoDAO dao;
+    private final LiveData<List<Transacao>> transacoes;
 
     public TransacaoRepository(TransacaoDAO dao) {
         this.dao = dao;
@@ -15,7 +15,7 @@ public class TransacaoRepository {
     }
 
     public LiveData<List<Transacao>> getTransacoes() {
-        return this.transacoes;
+        return transacoes;
     }
 
     @WorkerThread
@@ -23,8 +23,7 @@ public class TransacaoRepository {
         dao.adicionar(t);
     }
 
-
-    public Transacao buscarTransacaoPeloNumero(String numeroConta) {
+    public LiveData<List<Transacao>> buscarTransacaoPeloNumero(String numeroConta) {
         return dao.buscarTransacaoPeloNumero(numeroConta);
     }
 

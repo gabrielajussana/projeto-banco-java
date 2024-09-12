@@ -11,13 +11,13 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.List;
 
 import br.ufpe.cin.banco.BancoDB;
-import br.ufpe.cin.banco.conta.Conta;
 
 public class TransacaoViewModel extends AndroidViewModel {
 
-    private TransacaoRepository repository;
-    public LiveData<List<Transacao>> transacoes;
+    private final TransacaoRepository repository;
+    private final LiveData<List<Transacao>> transacoes;
 
+    // MutableLiveData para a transação atual (opcional, dependendo de como você deseja usar isso)
     private final MutableLiveData<Transacao> _transacaoAtual = new MutableLiveData<>();
     public LiveData<Transacao> transacaoAtual = _transacaoAtual;
 
@@ -27,12 +27,26 @@ public class TransacaoViewModel extends AndroidViewModel {
         this.transacoes = repository.getTransacoes();
     }
 
+    // Método para obter todas as transações
+    public LiveData<List<Transacao>> getTransacoes() {
+        return transacoes;
+    }
+
+    // Método para inserir uma transação
+    @WorkerThread
     public void inserir(Transacao t) {
-        new Thread(() -> repository.inserir(t)).start();
+        repository.inserir(t);
     }
 
-    public void buscarTrasacaoPeloNumero(String numeroConta){
-
+    public LiveData<List<Transacao>> buscarTransacaoPeloNumero(String numeroConta) {
+        return repository.buscarTransacaoPeloNumero(numeroConta);
     }
 
+    public LiveData<List<Transacao>> buscarTransacaoPelaData(String dataTransacao) {
+        return repository.buscarTransacaoPelaData(dataTransacao);
+    }
+
+    public LiveData<List<Transacao>> filtrarPorTipo(char tipoTransacao) {
+        return repository.filtrarPorTipo(tipoTransacao);
+    }
 }
