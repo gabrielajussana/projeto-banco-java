@@ -26,10 +26,9 @@ import br.ufpe.cin.banco.transacoes.TransacaoViewModel;
 public class BancoViewModel extends AndroidViewModel {
     private ContaRepository contaRepository;
     private TransacaoRepository transacaoRepository;
-    public final MutableLiveData<List<Conta>> contasFiltradas = new MutableLiveData<>();
     private final MutableLiveData<List<Conta>> contasPeloNome = new MutableLiveData<>();
     private final MutableLiveData<List<Conta>> contasPeloCPF = new MutableLiveData<>();
-    private final MutableLiveData<Conta> contaPeloNumero = new MutableLiveData<>();
+    public final MutableLiveData<Conta> contaPeloNumero = new MutableLiveData<>();
     private final MutableLiveData<List<Transacao>> _listaTransacoes = new MutableLiveData<>();
     private final MutableLiveData<LiveData<List<Transacao>>> _transacaoAtual = new MutableLiveData<LiveData<List<Transacao>>>();
     private Date dataTransacao = new Date();
@@ -139,15 +138,6 @@ public class BancoViewModel extends AndroidViewModel {
         return contasPeloNome;
     }
 
-    public void buscarTransacoesPeloTipo(char tipoTransacao) {
-        new Thread(
-                () -> {
-                    List<Transacao> transacao = this.transacaoRepository.buscarPeloTipo(tipoTransacao);
-                    _listaTransacoes.postValue(transacao);
-                }
-        ).start();
-    }
-
     public LiveData<List<Conta>> buscarContasPeloCPF(String cpfCliente) {
         new Thread(() -> {
             List<Conta> contas = (List<Conta>) this.contaRepository.buscarContasPeloCPF(cpfCliente);
@@ -164,13 +154,6 @@ public class BancoViewModel extends AndroidViewModel {
         return contaPeloNumero;
     }
 
-    public void buscarContaPeloNumeroTransacao(String numeroConta) {
-       new Thread(() -> {
-            Conta conta = this.contaRepository.buscarContaPorNumero(numeroConta);
-            contaPeloNumero.postValue(conta);
-        }).start();
-
-    }
 
     public void buscarTransacoesPeloNumero(String numeroConta, char tipoTransacao) {
         new Thread(

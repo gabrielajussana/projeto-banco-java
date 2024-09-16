@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,19 +49,49 @@ public class PesquisarActivity extends AppCompatActivity {
                     int tipoSelecionado = tipoPesquisa.getCheckedRadioButtonId();
 
                     if (tipoSelecionado == R.id.peloNomeCliente) {
-                        viewModel.buscarContasPeloNome(oQueFoiDigitado);
+                       pesquisarPorNome(oQueFoiDigitado);
                     }else if (tipoSelecionado == R.id.peloCPFcliente) {
-                        viewModel.buscarContasPeloCPF(oQueFoiDigitado);
+                        pesquisarPorCPF(oQueFoiDigitado);
                     }else if (tipoSelecionado == R.id.peloNumeroConta) {
-                        viewModel.buscarContaPeloNumero(oQueFoiDigitado);
+                        pesquisarPorNumeroConta(oQueFoiDigitado);
                     }
                 }
         );
-
-        viewModel.contasFiltradas.observe(this, lista -> {
-            List<Conta> novaLista = new ArrayList<>(lista);
-            adapter.submitList(novaLista);
-        });
      }
+
+    private void pesquisarPorNome(String nomeCliente) {
+        viewModel.buscarContasPeloNome(nomeCliente).observe(this, contas -> {
+            if (contas != null && !contas.isEmpty()) {
+                adapter.submitList(contas);
+            } else {
+                mostrarMensagem("Conta não encontrada.");
+            }
+        });
+    }
+
+    private void pesquisarPorNumeroConta(String numeroConta) {
+        viewModel.buscarContaPeloNumero(numeroConta).observe(this, conta -> {
+            if (conta != null) {
+                adapter.submitList(Collections.singletonList(conta));
+            } else {
+                mostrarMensagem("Número da conta não encontrado.");
+            }
+        });
+    }
+
+    private void pesquisarPorCPF(String cpfCliente) {
+        viewModel.buscarContasPeloCPF(cpfCliente).observe(this, contas -> {
+            if (contas != null && !contas.isEmpty()) {
+                adapter.submitList(contas);
+            } else {
+                mostrarMensagem("CPF não encontrado.");
+            }
+        });
+    }
+
+    private void mostrarMensagem(String mensagem) {
+        runOnUiThread(() -> Toast.makeText(getApplicationContext(), mensagem, Toast.LENGTH_SHORT).show());
+        finish();
+    }
 
 }
