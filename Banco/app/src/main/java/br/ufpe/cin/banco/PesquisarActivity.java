@@ -15,11 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import br.ufpe.cin.banco.conta.Conta;
 import br.ufpe.cin.banco.conta.ContaAdapter;
+import br.ufpe.cin.banco.transacoes.Transacao;
 
-//Ver anotações TODO no código
 public class PesquisarActivity extends AppCompatActivity {
     BancoViewModel viewModel;
     ContaAdapter adapter;
@@ -43,43 +46,21 @@ public class PesquisarActivity extends AppCompatActivity {
                 v -> {
                     String oQueFoiDigitado = Pesquisar.getText().toString();
                     int tipoSelecionado = tipoPesquisa.getCheckedRadioButtonId();
-                    if (tipoSelecionado == R.id.peloNomeCliente) {
-                        viewModel.buscarContasPeloNome(oQueFoiDigitado).observe(this, contas -> {
-                            if (contas != null && !contas.isEmpty()) {
-                                adapter.submitList(contas);
-                            } else {
-                                runOnUiThread(() ->
-                                        Toast.makeText(getApplicationContext(), "Conta não encontrada.", Toast.LENGTH_SHORT).show()
 
-                                );
-                                finish();
-                            }
-                        });
+                    if (tipoSelecionado == R.id.peloNomeCliente) {
+                        viewModel.buscarContasPeloNome(oQueFoiDigitado);
                     }else if (tipoSelecionado == R.id.peloCPFcliente) {
-                        viewModel.buscarContasPeloCPF(oQueFoiDigitado).observe(this, contas -> {
-                            if (contas != null && !contas.isEmpty()) {
-                                adapter.submitList(contas);
-                            } else {
-                                runOnUiThread(() ->
-                                        Toast.makeText(getApplicationContext(), "Conta não encontrada.", Toast.LENGTH_SHORT).show()
-                                );
-                                finish();
-                            }
-                        });
+                        viewModel.buscarContasPeloCPF(oQueFoiDigitado);
                     }else if (tipoSelecionado == R.id.peloNumeroConta) {
-                        viewModel.buscarContaPeloNumero(oQueFoiDigitado).observe(this, conta -> {
-                            if (conta != null) {
-                                adapter.submitList(Collections.singletonList(conta));
-                            } else {
-                                runOnUiThread(() ->
-                                        Toast.makeText(getApplicationContext(), "Conta não encontrada.", Toast.LENGTH_SHORT).show()
-                                );
-                                finish();
-                            }
-                        });
+                        viewModel.buscarContaPeloNumero(oQueFoiDigitado);
                     }
                 }
         );
-    }
+
+        viewModel.getContasFiltradas().observe(this, lista -> {
+            List<Conta> novaLista = new ArrayList<>(lista);
+            adapter.submitList(novaLista);
+        });
+     }
 
 }

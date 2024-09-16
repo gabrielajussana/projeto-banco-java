@@ -76,7 +76,6 @@ public class TransacoesActivity extends AppCompatActivity {
 
         );
 
-        // Atualiza a lista no adapter
         bancoViewModel.listaTransacoes.observe(
                 this,
                 lista -> {

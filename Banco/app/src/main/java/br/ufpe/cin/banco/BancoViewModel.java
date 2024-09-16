@@ -26,7 +26,7 @@ import br.ufpe.cin.banco.transacoes.TransacaoViewModel;
 public class BancoViewModel extends AndroidViewModel {
     private ContaRepository contaRepository;
     private TransacaoRepository transacaoRepository;
-    private MutableLiveData<List<Conta>> contasFiltradas;
+    public MutableLiveData<List<Conta>> contasFiltradas;
     private final MutableLiveData<List<Conta>> contasPeloNome = new MutableLiveData<>();
     private final MutableLiveData<List<Conta>> contasPeloCPF = new MutableLiveData<>();
     private final MutableLiveData<Conta> contaPeloNumero = new MutableLiveData<>();
@@ -175,8 +175,8 @@ public class BancoViewModel extends AndroidViewModel {
                 }
         ).start();
 
-
-    }  public void buscarTransacoesPeloNum(String numeroConta) {
+    }
+    public void buscarTransacoesPeloNum(String numeroConta) {
         new Thread(
                 () -> {
                     List<Transacao> transacao = this.transacaoRepository.buscarPeloNumConta(numeroConta);
@@ -185,16 +185,6 @@ public class BancoViewModel extends AndroidViewModel {
         ).start();
     }
 
-
-
-    public void buscarTransacoesPeloTipo(char tipoTransacao) {
-        new Thread(
-                () -> {
-                    List<Transacao> transacao = this.transacaoRepository.buscarPeloTipo(tipoTransacao);
-                    _listaTransacoes.postValue(transacao);
-                }
-        ).start();
-    }
 
     public void buscarTransacoesPelaDataTipo(String dataTransacao, char tipoTransacao) {
         new Thread(
