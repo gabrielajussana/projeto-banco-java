@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import br.ufpe.cin.banco.transacoes.TransacaoViewModel;
 
-//Ver anotações TODO no código
 public class TransferirActivity extends AppCompatActivity {
 
     BancoViewModel viewModel;
@@ -38,10 +38,29 @@ public class TransferirActivity extends AppCompatActivity {
                 v -> {
                     String numOrigem = numeroContaOrigem.getText().toString();
                     String numDestino = numeroContaDestino.getText().toString();
-                    //TODO lembrar de implementar validação dos números das contas e do valor da operação, antes de efetuar a operação de transferência.
-                    // O método abaixo está sendo chamado, mas precisa ser implementado na classe BancoViewModel para funcionar.
-                    // Tem que salvar a transação no Banco de Dados também, criando um objeto Transacao que será salvo na tabela transacoes por meio de TransacaoViewModel
+                    String valorCampo = valorOperacao.getText().toString();
                     double valor = Double.valueOf(valorOperacao.getText().toString());
+
+                    // Verifica se o campo número da conta não está preenchido
+                    if (numOrigem.isEmpty() || numOrigem == null) {
+                        Toast.makeText(this, "Número da conta é obrigatório", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Verifica se o campo número da conta não está preenchido
+                    if (numDestino.isEmpty() || numDestino == null) {
+                        Toast.makeText(this, "Número da conta é obrigatório", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Verifica se o campo valor não está preenchido
+                    else if (valorCampo.isEmpty()) {
+                        Toast.makeText(this, "Digite um valor a ser creditado", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Verifica se o valor digitado é positivo
+                    else if (valor <= 0) {
+                        Toast.makeText(this, "Digite um valor positivo", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     viewModel.transferir(numOrigem, numDestino, valor);
                     finish();
                 }

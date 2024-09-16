@@ -1,106 +1,98 @@
 package br.ufpe.cin.banco.transacoes;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import java.util.ArrayList;
 import java.util.List;
-
+import br.ufpe.cin.banco.BancoViewModel;
 import br.ufpe.cin.banco.R;
 
+
 public class TransacoesActivity extends AppCompatActivity {
-    private TransacaoViewModel transacaoViewModel;
-    private TransacaoAdapter adapter;
-    public LiveData<List<Transacao>> transacoes;
+
+    // ViewModels para acessar os dados do banco e transações
+    BancoViewModel bancoViewModel;
+    TransacaoViewModel transacaoViewModel;
+
+    // Adapter para o RecyclerView
+    TransacaoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transacoes);
 
-        // Inicialize os componentes
+        // Inicializa os ViewModels
+        bancoViewModel = new ViewModelProvider(this).get(BancoViewModel.class);
         transacaoViewModel = new ViewModelProvider(this).get(TransacaoViewModel.class);
-        EditText aPesquisar = findViewById(R.id.pesquisa);
+
+        // Componentes da interface
+        EditText Pesquisar = findViewById(R.id.pesquisa);
         Button btnPesquisar = findViewById(R.id.btn_Pesquisar);
         RadioGroup tipoTransacao = findViewById(R.id.tipoTransacao);
         RadioGroup tipoPesquisa = findViewById(R.id.tipoPesquisa);
-        RecyclerView rvResultado = findViewById(R.id.rvResultado);
+        RecyclerView rv = findViewById(R.id.rvResultado);
 
-        // Configuração do RecyclerView
+        // Configura o RecyclerView
         adapter = new TransacaoAdapter(getLayoutInflater());
-        rvResultado.setLayoutManager(new LinearLayoutManager(this));
-        rvResultado.setAdapter(adapter);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(adapter);
 
-        // Inicialize a lista com todas as transações
-        transacaoViewModel.getTransacoes().observe(this, new Observer<List<Transacao>>() {
-            @Override
-            public void onChanged(List<Transacao> transacoes) {
-                adapter.submitList(transacoes);
-            }
-        });
 
-        // Configuração do botão de pesquisa
-        btnPesquisar.setOnClickListener(v -> {
-            String oQueFoiDigitado = aPesquisar.getText().toString();
-            int tipoPesquisaSelecionado = tipoPesquisa.getCheckedRadioButtonId();
-            int tipoTransacaoSelecionado =  tipoTransacao.getCheckedRadioButtonId();
+        // Botão de pesquisar transações
+        btnPesquisar.setOnClickListener(
+                v -> {
+                    String oQueFoiDigitado = Pesquisar.getText().toString();
+                    int TransacaoSelecionado = tipoTransacao.getCheckedRadioButtonId();
+                    int PesquisaSelecionado = tipoPesquisa.getCheckedRadioButtonId();
 
-            if (tipoPesquisaSelecionado == R.id.peloTipoTodos && tipoTransacaoSelecionado == R.id.peloNumeroConta) {
-                transacaoViewModel.buscarNumeroTodos(oQueFoiDigitado).observe(this, new Observer<List<Transacao>>() {
-                    @Override
-                    public void onChanged(List<Transacao> transacoes) {
-                        adapter.submitList(transacoes);
+                    if (TransacaoSelecionado == -1 || PesquisaSelecionado == -1) {
+                        Toast.makeText(TransacoesActivity.this, "Selecione o tipo de transação e o tipo de pesquisa", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                });
-            } else if (tipoPesquisaSelecionado == R.id.peloTipoTodos && tipoTransacaoSelecionado == R.id.pelaData) {
-                transacaoViewModel.buscarDataTodos(oQueFoiDigitado).observe(this, new Observer<List<Transacao>>() {
-                    @Override
-                    public void onChanged(List<Transacao> transacoes) {
-                        adapter.submitList(transacoes);
+
+                    if (TransacaoSelecionado == R.id.peloTipoCredito && PesquisaSelecionado == R.id.pelaData){
+                        bancoViewModel.buscarTransacoesPelaDataTipo(oQueFoiDigitado, 'C');
+                    } else if (TransacaoSelecionado == R.id.peloTipoCredito && PesquisaSelecionado == R.id.peloNumeroConta){
+                        bancoViewModel.buscarTransacoesPeloNumero(oQueFoiDigitado, 'C');
+                    }else if (TransacaoSelecionado == R.id.peloTipoDebito && PesquisaSelecionado == R.id.pelaData){
+                        bancoViewModel.buscarTransacoesPelaDataTipo(oQueFoiDigitado, 'D');
+                    } else if (TransacaoSelecionado == R.id.peloTipoDebito && PesquisaSelecionado == R.id.peloNumeroConta){
+                        bancoViewModel.buscarTransacoesPeloNumero(oQueFoiDigitado, 'D');
+                    } else if (TransacaoSelecionado == R.id.peloTipoTodos && PesquisaSelecionado == R.id.pelaData){
+                        bancoViewModel.buscarTransacoesPelaData(oQueFoiDigitado);
+                    } else if (TransacaoSelecionado == R.id.peloTipoTodos && PesquisaSelecionado == R.id.peloNumeroConta){
+                        bancoViewModel.buscarTransacoesPeloNum(oQueFoiDigitado);
                     }
-                });
-            } else if (tipoPesquisaSelecionado == R.id.peloTipoCredito && tipoTransacaoSelecionado == R.id.pelaData) {
-                transacaoViewModel.buscarDataCredito(oQueFoiDigitado, 'C').observe(
-                        this, transacoes -> {
-                            adapter.submitList(transacoes);
-                        }
-                );
-            }
-            else if (tipoPesquisaSelecionado == R.id.peloTipoCredito && tipoTransacaoSelecionado == R.id.peloNumeroConta) {
-                transacaoViewModel.buscarNumeroCredito(oQueFoiDigitado, 'C').observe(
-                        this, transacoes -> {
-                            adapter.submitList(transacoes);
-                        }
-                );
+                }
 
-            } else if (tipoPesquisaSelecionado == R.id.peloTipoDebito && tipoTransacaoSelecionado == R.id.pelaData) {
-                transacaoViewModel.buscarDataDebito(oQueFoiDigitado, 'D').observe(
-                        this, transacoes -> {
-                            adapter.submitList(transacoes);
-                        }
-                );
-            } else if (tipoPesquisaSelecionado == R.id.peloTipoDebito && tipoTransacaoSelecionado == R.id.peloNumeroConta) {
-                transacaoViewModel.buscarNumeroDebito(oQueFoiDigitado, 'D').observe(
-                        this, transacoes -> {
-                            adapter.submitList(transacoes);
-                        }
-                );
-            }
+        );
 
-            this.transacaoViewModel.transacoes.observe(
-                    this, transacoes -> {
-                        if (transacoes != null) {
-                            adapter.submitList(transacoes);
-                        }
-                    });
-        });
+        // Atualiza a lista no adapter
+        bancoViewModel.listaTransacoes.observe(
+                this,
+                lista -> {
+                    List<Transacao> novaLista = new ArrayList<>(lista);
+                    adapter.submitList(novaLista);
+                }
+        );
+
+        // Atualiza a lista de transações no RecyclerView
+        transacaoViewModel.transacoes.observe(
+                this,
+                todasTransacoes -> {
+                    adapter.submitList(todasTransacoes);
+                }
+        );
+
     }
+
 }

@@ -2,80 +2,96 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="5dp"
-    android:orientation="vertical" >
-
-    <Button
-        android:id="@+id/btnContas"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Contas"
-        android:layout_margin="3dp"
-        android:textSize="24sp">
-    </Button>
-    <Button
-        android:id="@+id/btnTransferir"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Transferir"
-        android:layout_margin="3dp"
-        android:textSize="24sp">
-    </Button>
-    <Button
-        android:id="@+id/btnDebitar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Debitar"
-        android:layout_margin="3dp"
-        android:textSize="24sp">
-    </Button>
-    <Button
-        android:id="@+id/btnCreditar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Creditar"
-        android:layout_margin="3dp"
-        android:textSize="24sp">
-    </Button>
-    <Button
-        android:id="@+id/btnPesquisar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Pesquisar"
-        android:layout_margin="3dp"
-        android:textSize="24sp">
-    </Button>
-
-    <Button
-        android:id="@+id/btnTransacoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:text="Transacoes"
-        android:textSize="24sp"></Button>
-
-    <Button
-        android:id="@+id/btnClientes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Clientes"
-        android:layout_margin="3dp"
-        android:textSize="24sp">
-    </Button>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="Total no Banco:"
-        android:textSize="26sp" />
+    android:orientation="vertical"
+    android:background="@color/background_color">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:id="@+id/totalDinheiroBanco"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:textColor="@color/newBlack"
+        android:textStyle="bold" />
+
+
+    <Button
+        android:id="@+id/btnContas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Contas"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        android:layout_marginBottom="8dp"
+        app:elevation="4dp" />
+
+    <Button
+        android:id="@+id/btnTransferir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transferir"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        android:layout_marginBottom="8dp"
+        app:elevation="4dp" />
+
+    <Button
+        android:id="@+id/btnDebitar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Debitar"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        android:layout_marginBottom="8dp"
+        app:elevation="4dp" />
+
+    <Button
+        android:id="@+id/btnCreditar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Creditar"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        android:layout_marginBottom="8dp"
+        app:elevation="4dp" />
+
+    <Button
+        android:id="@+id/btnPesquisar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Pesquisar"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        android:layout_marginBottom="8dp"
+        app:elevation="4dp" />
+
+    <Button
+        android:id="@+id/btnTransacoes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Transações"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        android:layout_marginBottom="8dp"
+        app:elevation="4dp" />
+
+    <Button
+        android:id="@+id/btnClientes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clientes"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/purple"
+        app:elevation="4dp" />
 
 
 </LinearLayout>

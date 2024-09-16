@@ -2,12 +2,12 @@ package br.ufpe.cin.banco.transacoes;
 
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
-
 import java.util.List;
 
+
 public class TransacaoRepository {
-    private final TransacaoDAO dao;
-    private final LiveData<List<Transacao>> transacoes;
+    private TransacaoDAO dao;
+    private LiveData<List<Transacao>> transacoes;
 
     public TransacaoRepository(TransacaoDAO dao) {
         this.dao = dao;
@@ -15,41 +15,42 @@ public class TransacaoRepository {
     }
 
     public LiveData<List<Transacao>> getTransacoes() {
-        return transacoes;
+        return this.transacoes;
     }
 
     @WorkerThread
     public void inserir(Transacao t) {
-        dao.adicionar(t);
+        dao.inserir(t);
     }
 
-    public LiveData<List<Transacao>> buscarTodos() {
-        return dao.transacoes();
+    // Busca transação pela data
+    @WorkerThread
+    public List<Transacao> buscarPelaDataTransacao(String dataTransacao){
+        return dao.buscarPelaDataTransacao(dataTransacao);
     }
 
-    public LiveData<List<Transacao>> buscarTodasTransacoesPeloNumero(String numeroConta){
-        return dao. buscarTransacaoPeloNumero(numeroConta);
+    // Busca transação pelo número da conta
+    @WorkerThread
+    public List<Transacao> buscarPeloNumConta(String numeroConta){
+        return dao.buscarPeloNumConta(numeroConta);
     }
 
-    public LiveData<List<Transacao>> buscarDataTodos(String dataTransacao){
-        return dao.buscarTodasTransacoesPelaData(dataTransacao);
+    // Busca transação pelo tipo
+    @WorkerThread
+    public List<Transacao> buscarPeloTipo(char tipoTransacao){
+        return dao.buscarPeloTipo(tipoTransacao);
     }
 
-    public LiveData<List<Transacao>> buscarDataCredito(String dataTransacao, char credito){
-        return dao.buscarPorDataCredito(dataTransacao, credito);
+    // Busca transação por data  e tipo
+    @WorkerThread
+    public List<Transacao> buscarPelaDataTipo(String dataTransacao, char tipoTransacao){
+        return dao.buscarPelaData(dataTransacao, tipoTransacao);
     }
 
-    public LiveData<List<Transacao>> buscarDataDebito(String dataTransacao, char debito){
-        return dao.buscarPorDataDebito(dataTransacao, debito);
+    // Busca transação por número da conta e tipo
+    @WorkerThread
+    public List<Transacao> buscarPeloNumeroConta(String numeroConta, char tipoTransaco){
+        return dao.buscarPeloNumeroConta(numeroConta, tipoTransaco);
     }
-
-    public LiveData<List<Transacao>> buscarNumeroCredito(String numeroConta, char credito){
-        return dao.buscarPorNumeroCredito(numeroConta, credito);
-    }
-
-    public LiveData<List<Transacao>> buscarNumeroDebito(String numeroConta, char debito){
-        return dao.buscarPorNumeroDebito(numeroConta, debito);
-    }
-
 
 }

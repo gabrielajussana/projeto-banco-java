@@ -2,6 +2,7 @@ package br.ufpe.cin.banco;
 
 import android.app.Application;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,9 +11,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import br.ufpe.cin.banco.conta.Conta;
 import br.ufpe.cin.banco.conta.ContaRepository;
@@ -24,10 +27,15 @@ public class BancoViewModel extends AndroidViewModel {
     private ContaRepository contaRepository;
     private TransacaoRepository transacaoRepository;
     private MutableLiveData<List<Conta>> contasFiltradas;
+    private final MutableLiveData<List<Conta>> contasPeloNome = new MutableLiveData<>();
+    private final MutableLiveData<List<Conta>> contasPeloCPF = new MutableLiveData<>();
+    private final MutableLiveData<Conta> contaPeloNumero = new MutableLiveData<>();
+    private final MutableLiveData<List<Transacao>> _listaTransacoes = new MutableLiveData<>();
+    private final MutableLiveData<LiveData<List<Transacao>>> _transacaoAtual = new MutableLiveData<LiveData<List<Transacao>>>();
     private Date dataTransacao = new Date();
     private TransacaoRepository repository;
-    private final MutableLiveData<LiveData<List<Transacao>>> _transacaoAtual = new MutableLiveData<LiveData<List<Transacao>>>();
     public LiveData<LiveData<List<Transacao>>> transacaoAtual = _transacaoAtual;
+    public LiveData<List<Transacao>> listaTransacoes = _listaTransacoes;
     public BancoViewModel(@NonNull Application application) {
         super(application);
         this.contaRepository = new ContaRepository(BancoDB.getDB(application).contaDAO());
@@ -41,6 +49,9 @@ public class BancoViewModel extends AndroidViewModel {
     public LiveData<List<Conta>> getContasFiltradas() {
         return contasFiltradas;
     }
+
+    SimpleDateFormat formatadorData = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
+    String dataFormatada = formatadorData.format(dataTransacao);
 
     void transferir(String numeroContaOrigem, String numeroContaDestino, double valor) {
         new Thread(() -> {
@@ -60,12 +71,10 @@ public class BancoViewModel extends AndroidViewModel {
                     contaRepository.atualizar(contaDestino);
 
                     // Debitar da conta de Origem
-                    Transacao transacaoDebito = new Transacao(0, 'C', numeroContaOrigem, valor, dataTransacao.toString());
-
+                    Transacao transacaoDebito = new Transacao(0, 'C', numeroContaOrigem, valor, dataFormatada);
 
                     // Creditar na conta de destino
-                    Transacao transacaoCredito = new Transacao(0,'D', numeroContaDestino, valor, dataTransacao.toString() );
-
+                    Transacao transacaoCredito = new Transacao(0,'D', numeroContaDestino, valor, dataFormatada );
 
                     // Salvar as transações
                     TransacaoViewModel transacaoViewModel = new ViewModelProvider.AndroidViewModelFactory(
@@ -95,7 +104,7 @@ public class BancoViewModel extends AndroidViewModel {
                 conta.setSaldo(novoSaldo);
                 contaRepository.atualizar(conta);
             }
-            Transacao transacao = new Transacao(0, 'C', numeroConta, valor, dataTransacao.toString());
+            Transacao transacao = new Transacao(0, 'C', numeroConta, valor, dataFormatada);
 
             // Criar um novo TransacaoViewModel se necessário
             TransacaoViewModel transacaoViewModel = new ViewModelProvider.AndroidViewModelFactory(
@@ -114,7 +123,7 @@ public class BancoViewModel extends AndroidViewModel {
                 conta.setSaldo(novoSaldo);
                 contaRepository.atualizar(conta);
             }
-            Transacao transacao = new Transacao(0, 'D', numeroConta, valor, dataTransacao.toString());
+            Transacao transacao = new Transacao(0, 'D', numeroConta, valor, dataFormatada);
             // Criar um novo TransacaoViewModel se necessário
             TransacaoViewModel transacaoViewModel = new ViewModelProvider.AndroidViewModelFactory(
                     getApplication()).create(TransacaoViewModel.class);
@@ -122,27 +131,87 @@ public class BancoViewModel extends AndroidViewModel {
         }).start();
     }
 
-    // Busca pelo nome do Cliente
-    public void buscarContasPeloNome(String nomeCliente) {
-        List<Conta> conta = (List<Conta>) this.contaRepository.buscarPeloNome(nomeCliente);
-        contasFiltradas.postValue(conta);
+    public LiveData<Double> getSaldoTotal() {
+        return contaRepository.getTotalSaldo();
     }
 
-    // Busca pelo CPF do Cliente
-    public void buscarContasPeloCPF(String cpfCliente) {
-        List<Conta> conta = (List<Conta>) this.contaRepository.buscarContasPeloCPF(cpfCliente);
-        contasFiltradas.postValue(conta);
+    public LiveData<List<Conta>> buscarContasPeloNome(String nomeCliente) {
+        new Thread(() -> {
+            List<Conta> contas = (List<Conta>) this.contaRepository.buscarPeloNome(nomeCliente);
+            contasPeloNome.postValue(contas);
+        }).start();
+        return contasPeloNome;
+    }
+
+    public LiveData<List<Conta>> buscarContasPeloCPF(String cpfCliente) {
+        new Thread(() -> {
+            List<Conta> contas = (List<Conta>) this.contaRepository.buscarContasPeloCPF(cpfCliente);
+            contasPeloCPF.postValue(contas);
+        }).start();
+        return contasPeloCPF;
+    }
+
+    public LiveData<Conta> buscarContaPeloNumero(String numeroConta) {
+        new Thread(() -> {
+            Conta conta = this.contaRepository.buscarContaPorNumero(numeroConta);
+            contaPeloNumero.postValue(conta);
+        }).start();
+        return contaPeloNumero;
+    }
+
+    public void buscarContaPeloNumeroTransacao(String numeroConta) {
+       new Thread(() -> {
+            Conta conta = this.contaRepository.buscarContaPorNumero(numeroConta);
+            contaPeloNumero.postValue(conta);
+        }).start();
 
     }
 
-    // Busca pelo número da Conta
-    public void buscarContaPeloNumero(String numeroConta) { //criando uma lista para mostrar na busca por número no PesquisarActivity
-        Conta conta = this.contaRepository.buscarContaPorNumero(numeroConta);
-        List<Conta> lista = new ArrayList<>();
-        if (conta != null) {
-            lista.add(conta);
-        }
-        contasFiltradas.postValue(lista);
+    public void buscarTransacoesPeloNumero(String numeroConta, char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> transacao = this.transacaoRepository.buscarPeloNumeroConta(numeroConta, tipoTransacao);
+                    _listaTransacoes.postValue(transacao);
+                }
+        ).start();
+
+
+    }  public void buscarTransacoesPeloNum(String numeroConta) {
+        new Thread(
+                () -> {
+                    List<Transacao> transacao = this.transacaoRepository.buscarPeloNumConta(numeroConta);
+                    _listaTransacoes.postValue(transacao);
+                }
+        ).start();
     }
+
+
+
+    public void buscarTransacoesPeloTipo(char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> transacao = this.transacaoRepository.buscarPeloTipo(tipoTransacao);
+                    _listaTransacoes.postValue(transacao);
+                }
+        ).start();
+    }
+
+    public void buscarTransacoesPelaDataTipo(String dataTransacao, char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> transacao = this.transacaoRepository.buscarPelaDataTipo(dataTransacao, tipoTransacao);
+                    _listaTransacoes.postValue(transacao);
+                }
+        ).start();
+    }
+    public void buscarTransacoesPelaData(String dataTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> transacao = this.transacaoRepository.buscarPelaDataTransacao(dataTransacao);
+                    _listaTransacoes.postValue(transacao);
+                }
+        ).start();
+    }
+
 
 }

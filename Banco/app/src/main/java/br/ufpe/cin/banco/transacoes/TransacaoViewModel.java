@@ -1,25 +1,19 @@
 package br.ufpe.cin.banco.transacoes;
 
 import android.app.Application;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import java.util.List;
-
 import br.ufpe.cin.banco.BancoDB;
+
 
 public class TransacaoViewModel extends AndroidViewModel {
 
-    private final TransacaoRepository repository;
-    public final LiveData<List<Transacao>> transacoes;
-
-    // MutableLiveData para a transação atual (opcional, dependendo de como você deseja usar isso)
-    private final MutableLiveData<Transacao> _transacaoAtual = new MutableLiveData<>();
-    public LiveData<Transacao> transacaoAtual = _transacaoAtual;
+    private TransacaoRepository repository;
+    public LiveData<List<Transacao>> transacoes;
+    MutableLiveData<List<Transacao>> _transacoesAtuais = new MutableLiveData<>();
 
     public TransacaoViewModel(@NonNull Application application) {
         super(application);
@@ -27,41 +21,48 @@ public class TransacaoViewModel extends AndroidViewModel {
         this.transacoes = repository.getTransacoes();
     }
 
-    // Método para obter todas as transações
-    public LiveData<List<Transacao>> getTransacoes() {
-        return transacoes;
-    }
-
-    // Método para inserir uma transação
-    @WorkerThread
     public void inserir(Transacao t) {
-        new Thread(() -> {
-            repository.inserir(t);
-        }).start();
+        new Thread(() -> repository.inserir(t)).start();
     }
 
-    public LiveData<List<Transacao>> buscarNumeroTodos(String numero) {
-        return repository.buscarTodasTransacoesPeloNumero(numero);
+    void  buscarPelaData(String dataTransacao, char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> t = this.repository.buscarPelaDataTipo(dataTransacao, tipoTransacao);
+                    _transacoesAtuais.postValue(t);
+                }
+        ).start();
+
     }
 
-    public LiveData<List<Transacao>> buscarDataTodos(String data) {
-        return repository.buscarDataTodos(data);
+    void  buscarPeloTipo(char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> t = this.repository.buscarPeloTipo(tipoTransacao);
+                    _transacoesAtuais.postValue(t);
+                }
+        ).start();
+
     }
 
-    public LiveData<List<Transacao>> buscarDataCredito(String data, char credito) {
-        return repository.buscarDataCredito(data, credito);
+    void  buscarPeloNumero(String numeroConta, char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> t = this.repository.buscarPeloNumeroConta(numeroConta,tipoTransacao);
+                    _transacoesAtuais.postValue(t);
+                }
+        ).start();
+
     }
 
-    public LiveData<List<Transacao>> buscarDataDebito(String data, char debito) {
-        return repository.buscarDataDebito(data, debito);
-    }
+    void  buscarPelaDataTransacao(String dataTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> t = this.repository.buscarPelaDataTransacao(dataTransacao);
+                    _transacoesAtuais.postValue(t);
+                }
+        ).start();
 
-    public LiveData<List<Transacao>> buscarNumeroCredito(String numero, char credito) {
-        return repository.buscarNumeroCredito(numero, credito);
-    }
-
-    public LiveData<List<Transacao>> buscarNumeroDebito(String numero, char debito) {
-        return repository.buscarNumeroDebito(numero, debito);
     }
 
 

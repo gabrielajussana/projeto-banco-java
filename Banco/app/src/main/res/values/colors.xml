@@ -4,4 +4,9 @@
     <color name="blue">#FF0000FF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FF0000</color>
+    <color name="background_color">#dbdbdb</color>
+    <color name="lightGreen">#ade39d</color>
+    <color name="purple">#7a40ff</color>
+    <color name="newBlack">#232323</color>
+
 </resources>
