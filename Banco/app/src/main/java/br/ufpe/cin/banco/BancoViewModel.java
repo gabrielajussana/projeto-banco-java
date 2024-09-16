@@ -26,7 +26,7 @@ import br.ufpe.cin.banco.transacoes.TransacaoViewModel;
 public class BancoViewModel extends AndroidViewModel {
     private ContaRepository contaRepository;
     private TransacaoRepository transacaoRepository;
-    public MutableLiveData<List<Conta>> contasFiltradas;
+    public final MutableLiveData<List<Conta>> contasFiltradas = new MutableLiveData<>();
     private final MutableLiveData<List<Conta>> contasPeloNome = new MutableLiveData<>();
     private final MutableLiveData<List<Conta>> contasPeloCPF = new MutableLiveData<>();
     private final MutableLiveData<Conta> contaPeloNumero = new MutableLiveData<>();
@@ -44,10 +44,6 @@ public class BancoViewModel extends AndroidViewModel {
 
     public LiveData<Double> getTotalSaldo() {
         return contaRepository.getTotalSaldo();
-    }
-
-    public LiveData<List<Conta>> getContasFiltradas() {
-        return contasFiltradas;
     }
 
     SimpleDateFormat formatadorData = new SimpleDateFormat("dd/MM/yyyy", new Locale("pt", "BR"));
@@ -141,6 +137,15 @@ public class BancoViewModel extends AndroidViewModel {
             contasPeloNome.postValue(contas);
         }).start();
         return contasPeloNome;
+    }
+
+    public void buscarTransacoesPeloTipo(char tipoTransacao) {
+        new Thread(
+                () -> {
+                    List<Transacao> transacao = this.transacaoRepository.buscarPeloTipo(tipoTransacao);
+                    _listaTransacoes.postValue(transacao);
+                }
+        ).start();
     }
 
     public LiveData<List<Conta>> buscarContasPeloCPF(String cpfCliente) {

@@ -57,7 +57,7 @@ public class PesquisarActivity extends AppCompatActivity {
                 }
         );
 
-        viewModel.getContasFiltradas().observe(this, lista -> {
+        viewModel.contasFiltradas.observe(this, lista -> {
             List<Conta> novaLista = new ArrayList<>(lista);
             adapter.submitList(novaLista);
         });
