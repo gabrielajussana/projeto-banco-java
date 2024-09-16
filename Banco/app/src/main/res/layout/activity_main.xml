@@ -1,96 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="5dp"
+    android:background="@color/newBlack"
     android:orientation="vertical"
-    android:background="@color/background_color">
+    android:padding="2dp">
 
     <TextView
+        android:id="@+id/total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@color/lightGreen"
+        android:fontFamily="@font/alata"
+        android:text="Total Banco:"
         android:textAlignment="center"
-        android:id="@+id/totalDinheiroBanco"
-        android:textSize="30sp"
         android:textColor="@color/newBlack"
+        android:textSize="30sp"
         android:textStyle="bold" />
 
+
+    <TextView
+        android:id="@+id/totalDinheiroBanco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="@color/lightGreen"
+        android:padding="20dp"
+        android:textAlignment="center"
+        android:textColor="@color/newBlack"
+        android:textSize="50sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnContas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Contas"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/purple"
+        android:text="Contas"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
     <Button
         android:id="@+id/btnTransferir"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Transferir"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/purple"
+        android:text="Transferir"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
     <Button
         android:id="@+id/btnDebitar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Debitar"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/purple"
+        android:text="Debitar"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
     <Button
         android:id="@+id/btnCreditar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Creditar"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/purple"
+        android:text="Creditar"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
     <Button
         android:id="@+id/btnPesquisar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pesquisar"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/purple"
+        android:text="Pesquisar"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
     <Button
         android:id="@+id/btnTransacoes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Transações"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/purple"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/purple"
+        android:text="Transações"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
     <Button
         android:id="@+id/btnClientes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clientes"
-        android:textSize="18sp"
-        android:textColor="@color/white"
         android:backgroundTint="@color/purple"
+        android:text="Clientes"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:elevation="4dp" />
 
 

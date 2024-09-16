@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Double saldoTotal) {
                 if (saldoTotal != null) {
-                    totalBanco.setText("Total no banco: R$ " + String.format("%.2f", saldoTotal));
+                    totalBanco.setText("R$ " + String.format("%.2f", saldoTotal));
                 } else {
-                    totalBanco.setText("Total no banco: R$ 0.00");
+                    totalBanco.setText("R$ 0.00");
                 }
             }
         });
