@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class BancoViewModel extends AndroidViewModel {
     private MutableLiveData<List<Conta>> contasFiltradas;
     private Date dataTransacao = new Date();
     private TransacaoRepository repository;
-    private final MutableLiveData<Transacao> _transacaoAtual = new MutableLiveData<>();
-    public LiveData<Transacao> transacaoAtual = _transacaoAtual;
+    private final MutableLiveData<LiveData<List<Transacao>>> _transacaoAtual = new MutableLiveData<LiveData<List<Transacao>>>();
+    public LiveData<LiveData<List<Transacao>>> transacaoAtual = _transacaoAtual;
     public BancoViewModel(@NonNull Application application) {
         super(application);
         this.contaRepository = new ContaRepository(BancoDB.getDB(application).contaDAO());
@@ -39,24 +40,6 @@ public class BancoViewModel extends AndroidViewModel {
 
     public LiveData<List<Conta>> getContasFiltradas() {
         return contasFiltradas;
-    }
-
-    void buscarContasPeloNome(String nomeCliente) {
-        contaRepository.buscarPeloNome(nomeCliente).observeForever(contas -> {
-            contasFiltradas.setValue(contas);
-        });
-    }
-
-    void buscarContasPeloCPF(String cpfCliente) {
-        contaRepository.buscarContasPeloCPF(cpfCliente).observeForever(contas -> {
-            contasFiltradas.setValue(contas);
-        });
-    }
-
-    void buscarContaPeloNumero(String numeroConta) {
-        contaRepository.buscarContasPeloNumero(numeroConta).observeForever(contas -> {
-            contasFiltradas.setValue(contas);
-        });
     }
 
     void transferir(String numeroContaOrigem, String numeroContaDestino, double valor) {
@@ -139,29 +122,27 @@ public class BancoViewModel extends AndroidViewModel {
         }).start();
     }
 
-    void buscarTransacoesPeloNumero(String numeroConta) {
-        new Thread(
-                () -> {
-                    Transacao transacao = repository.buscarTransacaoPeloNumero(numeroConta);
-                    _transacaoAtual.postValue(transacao);
-                }
-        ).start();
+    // Busca pelo nome do Cliente
+    public void buscarContasPeloNome(String nomeCliente) {
+        List<Conta> conta = (List<Conta>) this.contaRepository.buscarPeloNome(nomeCliente);
+        contasFiltradas.postValue(conta);
     }
 
-    void buscarTransacoesPeloTipo(char tipoTransacao) {
-        new Thread(
-                () -> {
-                    LiveData<List<Transacao>> transacao = repository.filtrarPorTipo(tipoTransacao);
-                }
-        ).start();
+    // Busca pelo CPF do Cliente
+    public void buscarContasPeloCPF(String cpfCliente) {
+        List<Conta> conta = (List<Conta>) this.contaRepository.buscarContasPeloCPF(cpfCliente);
+        contasFiltradas.postValue(conta);
+
     }
 
-    void buscarTransacoesPelaData(String dataTransacao) {
-        new Thread(
-                () -> {
-                    LiveData<List<Transacao>> transacao = repository.buscarTransacaoPelaData(dataTransacao);
-                }
-        ).start();
+    // Busca pelo número da Conta
+    public void buscarContaPeloNumero(String numeroConta) { //criando uma lista para mostrar na busca por número no PesquisarActivity
+        Conta conta = this.contaRepository.buscarContaPorNumero(numeroConta);
+        List<Conta> lista = new ArrayList<>();
+        if (conta != null) {
+            lista.add(conta);
+        }
+        contasFiltradas.postValue(lista);
     }
 
 }

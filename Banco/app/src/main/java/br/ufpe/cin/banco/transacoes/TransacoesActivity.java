@@ -6,6 +6,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import br.ufpe.cin.banco.R;
 public class TransacoesActivity extends AppCompatActivity {
     private TransacaoViewModel transacaoViewModel;
     private TransacaoAdapter adapter;
+    public LiveData<List<Transacao>> transacoes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,39 +51,56 @@ public class TransacoesActivity extends AppCompatActivity {
         btnPesquisar.setOnClickListener(v -> {
             String oQueFoiDigitado = aPesquisar.getText().toString();
             int tipoPesquisaSelecionado = tipoPesquisa.getCheckedRadioButtonId();
+            int tipoTransacaoSelecionado =  tipoTransacao.getCheckedRadioButtonId();
 
-            if (tipoPesquisaSelecionado == R.id.numeroContaTransacao) {
-                transacaoViewModel.buscarTransacaoPeloNumero(oQueFoiDigitado).observe(this, new Observer<List<Transacao>>() {
+            if (tipoPesquisaSelecionado == R.id.peloTipoTodos && tipoTransacaoSelecionado == R.id.peloNumeroConta) {
+                transacaoViewModel.buscarNumeroTodos(oQueFoiDigitado).observe(this, new Observer<List<Transacao>>() {
                     @Override
                     public void onChanged(List<Transacao> transacoes) {
                         adapter.submitList(transacoes);
                     }
                 });
-            } else if (tipoPesquisaSelecionado == R.id.dataTransacao) {
-                transacaoViewModel.buscarTransacaoPelaData(oQueFoiDigitado).observe(this, new Observer<List<Transacao>>() {
+            } else if (tipoPesquisaSelecionado == R.id.peloTipoTodos && tipoTransacaoSelecionado == R.id.pelaData) {
+                transacaoViewModel.buscarDataTodos(oQueFoiDigitado).observe(this, new Observer<List<Transacao>>() {
                     @Override
                     public void onChanged(List<Transacao> transacoes) {
                         adapter.submitList(transacoes);
                     }
                 });
-            } else if (tipoPesquisaSelecionado == R.id.tipoTransacao) {
-                int tipoSelecionado = tipoTransacao.getCheckedRadioButtonId();
-                char tipo = ' '; // Inicialize com um valor padrão, se necessário.
-
-                // Defina o tipo com base no ID do botão selecionado
-                if (tipoSelecionado == R.id.peloTipoCredito) {
-                    tipo = 'C'; // Defina o tipo de transação para crédito
-                } else if (tipoSelecionado == R.id.peloTipoDebito) {
-                    tipo = 'D'; // Defina o tipo de transação para débito
-                }
-
-                transacaoViewModel.filtrarPorTipo(tipo).observe(this, new Observer<List<Transacao>>() {
-                    @Override
-                    public void onChanged(List<Transacao> transacoes) {
-                        adapter.submitList(transacoes);
-                    }
-                });
+            } else if (tipoPesquisaSelecionado == R.id.peloTipoCredito && tipoTransacaoSelecionado == R.id.pelaData) {
+                transacaoViewModel.buscarDataCredito(oQueFoiDigitado, 'C').observe(
+                        this, transacoes -> {
+                            adapter.submitList(transacoes);
+                        }
+                );
             }
+            else if (tipoPesquisaSelecionado == R.id.peloTipoCredito && tipoTransacaoSelecionado == R.id.peloNumeroConta) {
+                transacaoViewModel.buscarNumeroCredito(oQueFoiDigitado, 'C').observe(
+                        this, transacoes -> {
+                            adapter.submitList(transacoes);
+                        }
+                );
+
+            } else if (tipoPesquisaSelecionado == R.id.peloTipoDebito && tipoTransacaoSelecionado == R.id.pelaData) {
+                transacaoViewModel.buscarDataDebito(oQueFoiDigitado, 'D').observe(
+                        this, transacoes -> {
+                            adapter.submitList(transacoes);
+                        }
+                );
+            } else if (tipoPesquisaSelecionado == R.id.peloTipoDebito && tipoTransacaoSelecionado == R.id.peloNumeroConta) {
+                transacaoViewModel.buscarNumeroDebito(oQueFoiDigitado, 'D').observe(
+                        this, transacoes -> {
+                            adapter.submitList(transacoes);
+                        }
+                );
+            }
+
+            this.transacaoViewModel.transacoes.observe(
+                    this, transacoes -> {
+                        if (transacoes != null) {
+                            adapter.submitList(transacoes);
+                        }
+                    });
         });
     }
 }

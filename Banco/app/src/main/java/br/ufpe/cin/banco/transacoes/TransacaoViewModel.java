@@ -15,7 +15,7 @@ import br.ufpe.cin.banco.BancoDB;
 public class TransacaoViewModel extends AndroidViewModel {
 
     private final TransacaoRepository repository;
-    private final LiveData<List<Transacao>> transacoes;
+    public final LiveData<List<Transacao>> transacoes;
 
     // MutableLiveData para a transação atual (opcional, dependendo de como você deseja usar isso)
     private final MutableLiveData<Transacao> _transacaoAtual = new MutableLiveData<>();
@@ -35,18 +35,34 @@ public class TransacaoViewModel extends AndroidViewModel {
     // Método para inserir uma transação
     @WorkerThread
     public void inserir(Transacao t) {
-        repository.inserir(t);
+        new Thread(() -> {
+            repository.inserir(t);
+        }).start();
     }
 
-    public LiveData<List<Transacao>> buscarTransacaoPeloNumero(String numeroConta) {
-        return repository.buscarTransacaoPeloNumero(numeroConta);
+    public LiveData<List<Transacao>> buscarNumeroTodos(String numero) {
+        return repository.buscarTodasTransacoesPeloNumero(numero);
     }
 
-    public LiveData<List<Transacao>> buscarTransacaoPelaData(String dataTransacao) {
-        return repository.buscarTransacaoPelaData(dataTransacao);
+    public LiveData<List<Transacao>> buscarDataTodos(String data) {
+        return repository.buscarDataTodos(data);
     }
 
-    public LiveData<List<Transacao>> filtrarPorTipo(char tipoTransacao) {
-        return repository.filtrarPorTipo(tipoTransacao);
+    public LiveData<List<Transacao>> buscarDataCredito(String data, char credito) {
+        return repository.buscarDataCredito(data, credito);
     }
+
+    public LiveData<List<Transacao>> buscarDataDebito(String data, char debito) {
+        return repository.buscarDataDebito(data, debito);
+    }
+
+    public LiveData<List<Transacao>> buscarNumeroCredito(String numero, char credito) {
+        return repository.buscarNumeroCredito(numero, credito);
+    }
+
+    public LiveData<List<Transacao>> buscarNumeroDebito(String numero, char debito) {
+        return repository.buscarNumeroDebito(numero, debito);
+    }
+
+
 }

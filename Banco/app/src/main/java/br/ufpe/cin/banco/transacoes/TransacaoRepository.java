@@ -23,16 +23,33 @@ public class TransacaoRepository {
         dao.adicionar(t);
     }
 
-    public LiveData<List<Transacao>> buscarTransacaoPeloNumero(String numeroConta) {
-        return dao.buscarTransacaoPeloNumero(numeroConta);
+    public LiveData<List<Transacao>> buscarTodos() {
+        return dao.transacoes();
     }
 
-    public LiveData<List<Transacao>> buscarTransacaoPelaData(String dataTransacao) {
-        return dao.buscarTransacaoPelaData(dataTransacao);
+    public LiveData<List<Transacao>> buscarTodasTransacoesPeloNumero(String numeroConta){
+        return dao. buscarTransacaoPeloNumero(numeroConta);
     }
 
-    public LiveData<List<Transacao>> filtrarPorTipo(char tipoTransacao) {
-        return dao.filtrarPorTipo(tipoTransacao);
+    public LiveData<List<Transacao>> buscarDataTodos(String dataTransacao){
+        return dao.buscarTodasTransacoesPelaData(dataTransacao);
     }
+
+    public LiveData<List<Transacao>> buscarDataCredito(String dataTransacao, char credito){
+        return dao.buscarPorDataCredito(dataTransacao, credito);
+    }
+
+    public LiveData<List<Transacao>> buscarDataDebito(String dataTransacao, char debito){
+        return dao.buscarPorDataDebito(dataTransacao, debito);
+    }
+
+    public LiveData<List<Transacao>> buscarNumeroCredito(String numeroConta, char credito){
+        return dao.buscarPorNumeroCredito(numeroConta, credito);
+    }
+
+    public LiveData<List<Transacao>> buscarNumeroDebito(String numeroConta, char debito){
+        return dao.buscarPorNumeroDebito(numeroConta, debito);
+    }
+
 
 }
