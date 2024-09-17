@@ -1,8 +1,11 @@
 package br.ufpe.cin.banco.transacoes;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.util.List;
 
 //ESTA CLASSE NAO PRECISA SER MODIFICADA!
 @Entity(tableName = "transacoes")

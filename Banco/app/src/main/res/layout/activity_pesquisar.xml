@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="7dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/newBlack">
 
     <EditText
         android:id="@+id/pesquisa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:textColor="@color/white"
         android:hint="Digite algum termo para pesquisar" />
 
     <RadioGroup
@@ -23,19 +25,22 @@
                 android:checked="true"
                 android:layout_margin="3dp"
                 android:id="@+id/peloNomeCliente"
-                android:text="Nome" />
+                android:text="Nome"
+                android:textColor="@color/white"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:id="@+id/peloCPFcliente"
-                android:text="CPF" />
+                android:text="CPF"
+                android:textColor="@color/white"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="3dp"
                 android:id="@+id/peloNumeroConta"
-                android:text="Número da Conta" />
+                android:text="Número da Conta"
+                android:textColor="@color/white"/>
     </RadioGroup>
 
 

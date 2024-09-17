@@ -6,13 +6,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import br.ufpe.cin.banco.cliente.ClientesActivity;
 import br.ufpe.cin.banco.conta.ContasActivity;
 import br.ufpe.cin.banco.transacoes.TransacoesActivity;
 
-//Ver anotações TODO no código
 public class MainActivity extends AppCompatActivity {
     BancoViewModel viewModel;
 
@@ -31,6 +31,17 @@ public class MainActivity extends AppCompatActivity {
         Button transacoes = findViewById(R.id.btnTransacoes);
 
         TextView totalBanco = findViewById(R.id.totalDinheiroBanco);
+
+        viewModel.getTotalSaldo().observe(this, new Observer<Double>() {
+            @Override
+            public void onChanged(Double saldoTotal) {
+                if (saldoTotal != null) {
+                    totalBanco.setText("R$ " + String.format("%.2f", saldoTotal));
+                } else {
+                    totalBanco.setText("R$ 0.00");
+                }
+            }
+        });
 
         //Remover a linha abaixo se for implementar a parte de Clientes
         clientes.setEnabled(false);
@@ -57,5 +68,4 @@ public class MainActivity extends AppCompatActivity {
                 v -> startActivity(new Intent(this, TransacoesActivity.class))
         );
     }
-    //TODO Neste arquivo ainda falta a atualização automática do valor total de dinheiro armazenado no banco
 }

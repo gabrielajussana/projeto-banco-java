@@ -1,22 +1,22 @@
 package br.ufpe.cin.banco.transacoes;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Color;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-
+import java.text.NumberFormat;
+import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.text.NumberFormat;
-
 import br.ufpe.cin.banco.R;
-import br.ufpe.cin.banco.conta.Conta;
-import br.ufpe.cin.banco.conta.EditarContaActivity;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-//Ver anotações TODO no código
+
 public class TransacaoViewHolder extends RecyclerView.ViewHolder {
+
+    // Informações da transação
     TextView valorTransacao = null;
     TextView numeroConta = null;
     TextView dataTransacao = null;
@@ -31,11 +31,25 @@ public class TransacaoViewHolder extends RecyclerView.ViewHolder {
     }
 
     void bindTo(Transacao t) {
-        this.valorTransacao.setText(String.valueOf(t.valorTransacao));
-        //TODO trocar a cor do texto com o valor da transação se for débito para vermelho
 
-        this.numeroConta.setText(t.numeroConta);
-        this.dataTransacao.setText(t.dataTransacao.toString());
+        // Formatação do valor da transação para formato da moeda brasileira
+        NumberFormat formatadorMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        String valorFormatado = formatadorMoeda.format(t.valorTransacao);
+        this.valorTransacao.setText(valorFormatado);
 
+        // Muda valor da transação para vermelho caso seja débito
+        if (t.tipoTransacao == 'D') {
+            this.valorTransacao.setTextColor(Color.RED);
+            this.valorTransacao.setText(valorFormatado);
+        }
+        // Muda valor da transação para azul caso seja crédito
+        else {
+            this.valorTransacao.setTextColor(Color.BLUE);
+            this.valorTransacao.setText(valorFormatado);
+        }
+
+        // Envia informações de número da conta e data da transação
+        this.numeroConta.setText("Conta: " + t.numeroConta);
+        this.dataTransacao.setText(t.dataTransacao);
     }
 }

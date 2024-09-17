@@ -23,35 +23,30 @@ public class ContaRepository {
         dao.adicionar(c);
     }
 
-    // Atualizar conta
     @WorkerThread
     public void atualizar(Conta c) {
         dao.atualizar(c);
     }
 
-    // Remover conta
     @WorkerThread
     public void remover(Conta c) {
         dao.remover(c);
     }
+    public  LiveData<List<Conta>> buscarPeloNome(String nomeCliente) {
+        return dao.buscarContasPeloNome(nomeCliente);
+    }
+    public LiveData<List<Conta>> buscarContasPeloCPF(String cpfCliente) {
+        return dao.buscarContasPeloCPF(cpfCliente);
+    }
+    public LiveData<List<Conta>> buscarContasPeloNumero(String numeroConta) {
+        return dao.buscarContasPeloNumero(numeroConta);
+    }
 
-    // Buscar pelo número da conta
     @WorkerThread
-    public Conta buscarPeloNumero(String numeroConta) {
+    public Conta buscarContaPorNumero(String numeroConta) {
         return dao.buscarPeloNumero(numeroConta);
     }
-
-    // Buscar pelo nome do cliente
-    @WorkerThread
-    public List<Conta> buscarPeloNome(String nomeCliente) {
-        return dao.buscarPorNomeCliente(nomeCliente);
+    public LiveData<Double> getTotalSaldo() {
+        return dao.getSaldoTotal();
     }
-
-    // Buscar pelo CFP do cliente
-    @WorkerThread
-    public List<Conta> buscarPorCpf(String cpfCliente) {
-        return dao.buscarPorCpf(cpfCliente);
-    }
-
-
 }

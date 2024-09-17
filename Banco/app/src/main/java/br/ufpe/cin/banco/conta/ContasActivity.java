@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,31 +37,9 @@ public class ContasActivity extends AppCompatActivity {
                     startActivity(new Intent(this, AdicionarContaActivity.class));
                 }
         );
-        listaContas();
-    }
 
-    public void listaContas(){
-        buscarContas(1000);
-    }
-
-    private void buscarContas(int tempo) {
-        final Handler handler = new Handler();
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<Conta> conta = BancoDB.getDB(getApplicationContext()).contaDAO().todasContas();
-                adapter.submitList(conta);
-            }
+        viewModel.contas.observe(this, todasContas -> {
+            adapter.submitList(todasContas);
         });
-        thread.start();
-
-        final Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                listaContas();
-            }
-        };
-        handler.postDelayed(runnable, tempo);
     }
 }

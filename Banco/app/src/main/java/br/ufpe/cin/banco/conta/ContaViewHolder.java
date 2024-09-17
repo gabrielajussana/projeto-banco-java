@@ -41,7 +41,7 @@ public class ContaViewHolder  extends RecyclerView.ViewHolder {
         this.nomeCliente.setText(c.nomeCliente);
         this.infoConta.setText(c.numero + " | " + "Saldo atual: R$" + NumberFormat.getCurrencyInstance().format(c.saldo));
         //Atualizar a imagem de acordo com o valor do saldo atual
-        if (c.saldo > 0) {
+        if (c.saldo >= 0) {
             this.icone.setImageResource(R.drawable.ok);
         } else {
             this.icone.setImageResource(R.drawable.delete);
@@ -49,30 +49,23 @@ public class ContaViewHolder  extends RecyclerView.ViewHolder {
 
         this.btnEdit.setOnClickListener(
                 v -> {
-                    Toast.makeText(
-                            this.context,
-                            "clicou no botão de editar conta",
-                            Toast.LENGTH_SHORT
-                    ).show();
                     Intent i = new Intent(
                             this.context,
                             EditarContaActivity.class
                     );
                     //Passar o número da conta pelo Intent
-                    i.putExtra("NUMERO_CONTA", c.numero);
+                    i.putExtra(EditarContaActivity.KEY_NUMERO_CONTA, c.numero);
                     this.context.startActivity(i);
                 }
         );
+
         this.btnDelete.setOnClickListener(
                 v -> {
-                    Toast.makeText(
-                            this.context,
-                            "clicou no botão de deletar conta",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    if (viewModel != null) {
-                        viewModel.remover(c);
-                    }
+                    Intent i = new Intent(context, EditarContaActivity.class);
+                    i.putExtra(EditarContaActivity.KEY_NUMERO_CONTA, c.numero);
+                    i.putExtra("remover", true);
+                    Toast.makeText(context, "Conta deletada com sucesso!", Toast.LENGTH_SHORT).show();
+                    context.startActivity(i);
                 }
         );
     }

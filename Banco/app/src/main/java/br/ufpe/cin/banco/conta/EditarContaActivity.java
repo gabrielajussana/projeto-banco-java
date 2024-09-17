@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,7 +15,7 @@ public class EditarContaActivity extends AppCompatActivity {
 
     public static final String KEY_CPF_CONTA = "CPFDaConta";
     public static final String KEY_NOME_CONTA = "NomeDaConta";
-    public static final String KEY_NUMERO_CONTA = "numeroDaConta";
+    public static final String KEY_NUMERO_CONTA = "NumeroDaConta";
     ContaViewModel viewModel;
 
     @Override
@@ -33,7 +34,23 @@ public class EditarContaActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         String numeroConta = i.getStringExtra(KEY_NUMERO_CONTA);
-        //TODO usar o número da conta passado via Intent para recuperar informações da conta
+
+        // Buscar conta pelo número
+        viewModel.buscarPeloNumero(numeroConta);
+
+        // Preencher campos
+        viewModel.contaAtual.observe(this, conta -> {
+            if (conta != null) {
+                campoNumero.setText(conta.numero);
+                campoNome.setText(conta.nomeCliente);
+                campoCPF.setText(conta.cpfCliente);
+                campoSaldo.setText(String.valueOf(conta.saldo));
+            } else {
+                // Exibe toast caso a conta não seja encontrada
+                Toast.makeText(this, "Conta não encontrada", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
 
         btnAtualizar.setText("Editar");
         btnAtualizar.setOnClickListener(
@@ -41,13 +58,46 @@ public class EditarContaActivity extends AppCompatActivity {
                     String nomeCliente = campoNome.getText().toString();
                     String cpfCliente = campoCPF.getText().toString();
                     String saldoConta = campoSaldo.getText().toString();
-                    //TODO: Incluir validações aqui, antes de criar um objeto Conta. Se todas as validações passarem, aí sim monta um objeto Conta.
-                    //TODO: chamar o método que vai atualizar a conta no Banco de Dados
+
+                    // Validação para verificar se todos os campos estão preenchidos
+                    if (nomeCliente.isEmpty() || cpfCliente.isEmpty() || saldoConta.isEmpty()) {
+                        Toast.makeText(this, "Todos os campos devem ser preenchidos", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Validação tamanho do CPF
+                    if (cpfCliente.length() != 11) {
+                        Toast.makeText(this, "CPF deve conter 11 dígitos", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    double saldo;
+                    try {
+                        saldo = Double.parseDouble(saldoConta);
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(this, "Saldo inválido", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Conta com dados atualizados
+                    Conta atualizada = new Conta(numeroConta, saldo, nomeCliente, cpfCliente);
+                    viewModel.atualizar(atualizada);
+                    Toast.makeText(this, "Conta atualizada com sucesso", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
         );
 
         btnRemover.setOnClickListener(v -> {
-            //TODO implementar remoção da conta
+            // Remover conta
+            viewModel.remover(new Conta(numeroConta, 0, "", ""));
+            Toast.makeText(this, "Conta removida com sucesso", Toast.LENGTH_SHORT).show();
+            finish();
         });
+
+
+        boolean remover = i.getBooleanExtra("remover", false);
+        if (remover) {
+            btnRemover.performClick();
+        }
     }
 }

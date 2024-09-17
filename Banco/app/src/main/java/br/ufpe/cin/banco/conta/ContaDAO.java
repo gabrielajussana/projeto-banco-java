@@ -13,35 +13,41 @@ import java.util.List;
 @Dao
 public interface ContaDAO {
 
-    @Insert(entity = Conta.class, onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void adicionar(Conta c);
 
     // Atualizar conta existente no banco de dados
     @Update
     void atualizar(Conta c);
 
-    // Remove uma conta do banco de dados
+    // Remover uma conta do banco de dados
     @Delete
     void remover(Conta c);
 
     @Query("SELECT * FROM contas ORDER BY numero ASC")
     LiveData<List<Conta>> contas();
 
-    @Query("SELECT * FROM contas ORDER BY numero ASC")
-    List<Conta> todasContas();
-
-    //método para buscar pelo número da conta
-    @Query("SELECT * FROM contas WHERE numero = :numeroConta")
+    // Método para buscar pelo número da conta
+    @Query("SELECT * FROM contas WHERE numero = :numeroConta LIMIT 1")
     Conta buscarPeloNumero(String numeroConta);
 
-    //método para buscar  pelo nome
-    @Query("SELECT * FROM contas WHERE nomeCliente = :nomeCliente")
-    List<Conta> buscarPorNomeCliente(String nomeCliente);
+    // Método para buscar  pelo nome do cliente
+    @Query("SELECT * FROM contas WHERE nomeCliente LIKE '%' || :nomeCliente || '%'")
+    LiveData<List<Conta>> buscarContasPeloNome(String nomeCliente);
 
-    // método para buscar  pelo CPF do Cliente
-    @Query("SELECT * FROM contas WHERE cpfCliente = :cpfCliente")
-    List<Conta> buscarPorCpf(String cpfCliente);
+    // Método para buscar  pelo CPF do Cliente
+    @Query("SELECT * FROM contas WHERE cpfCliente LIKE '%' || :cpfCliente || '%'")
+    LiveData<List<Conta>> buscarContasPeloCPF(String cpfCliente);
 
-    @Query("SELECT SUM(saldo) FROM contas")
-    Double saldoTotal();
+    // método para buscar  contas pelo número
+    @Query("SELECT * FROM contas WHERE numero LIKE '%' || :numeroConta || '%'")
+    LiveData<List<Conta>> buscarContasPeloNumero(String numeroConta);
+
+    // método para buscar  uma única conta pelo número
+    @Query("SELECT * FROM contas WHERE numero = :numeroConta")
+    Conta buscarContaPorNumero(String numeroConta);
+
+    // método para buscar o saldo total
+    @Query("SELECT SUM(CASE WHEN saldo > 0 THEN saldo ELSE 0 END) FROM contas")
+    LiveData<Double> getSaldoTotal();
 }

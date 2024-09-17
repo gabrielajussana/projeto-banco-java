@@ -5,13 +5,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import br.ufpe.cin.banco.conta.Conta;
 import br.ufpe.cin.banco.transacoes.TransacaoViewModel;
 
-//Ver anotações TODO no código
+
 public class DebitarActivity extends AppCompatActivity {
     BancoViewModel viewModel;
     TransacaoViewModel transacaoViewModel;
@@ -39,11 +41,28 @@ public class DebitarActivity extends AppCompatActivity {
         btnOperacao.setOnClickListener(
                 v -> {
                     String numOrigem = numeroContaOrigem.getText().toString();
-                    //TODO lembrar de implementar validação do número da conta e do valor da operação, antes de efetuar a operação de débito.
-                    // O método abaixo está sendo chamado, mas precisa ser implementado na classe BancoViewModel para funcionar.
-                    // Tem que salvar a transação no Banco de Dados também, criando um objeto Transacao que será salvo na tabela transacoes por meio de TransacaoViewModel
                     double valor = Double.valueOf(valorOperacao.getText().toString());
+                    String valorCampo = valorOperacao.getText().toString();
+
+                    // Verifica se o campo número da conta não está preenchido
+                    if (numOrigem.isEmpty() || numOrigem == null) {
+                        Toast.makeText(this, "Número da conta é obrigatório", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Verifica se o campo valor não está preenchido
+                    else if (valorCampo.isEmpty()) {
+                        Toast.makeText(this, "Digite um valor a ser debitado", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Verifica se o valor digitado é positivo
+                    else if (valor <= 0) {
+                        Toast.makeText(this, "Digite um valor positivo", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    //Realiza operação de debitar
                     viewModel.debitar(numOrigem, valor);
+                    Toast.makeText(this, "Operação realizada com sucesso", Toast.LENGTH_SHORT).show();
                     finish();
                 }
         );
