@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:background="@color/newBlack">
 
     <TextView
         android:layout_width="wrap_content"
@@ -11,13 +12,15 @@
         android:id="@+id/tipoOperacao"
         android:text="TIPO DA OPERAÇÃO"
         android:textSize="32sp"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Número da Conta Origem"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/numeroContaOrigem"
@@ -28,14 +31,16 @@
         android:fontFamily="sans-serif-light"
         android:hint="Digite o número da conta"
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/labelContaDestino"
         android:text="Número da Conta Destino"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/numeroContaDestino"
@@ -46,13 +51,15 @@
         android:fontFamily="sans-serif-light"
         android:hint="Digite o número da conta"
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Valor"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/valor"
@@ -63,14 +70,14 @@
         android:fontFamily="sans-serif-light"
         android:hint="Digite o valor a ser "
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/btnOperacao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Realizar Operação"
-        android:textColor="#FFFFFF" />
+        android:text="Realizar Operação"/>
 
 </LinearLayout>

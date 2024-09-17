@@ -7,6 +7,15 @@
     android:orientation="vertical"
     android:padding="2dp">
 
+    <ImageView
+        android:id="@+id/icone"
+        android:layout_width="411dp"
+        android:layout_height="136dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="Icone"
+        android:padding="2dip"
+        android:src="@drawable/banco_logo" />
+
     <TextView
         android:id="@+id/total"
         android:layout_width="match_parent"

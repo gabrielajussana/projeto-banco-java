@@ -3,14 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="7dp">
+    android:padding="7dp"
+    android:background="@color/newBlack">
 
     <EditText
         android:id="@+id/pesquisa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:hint="Digite algum termo para pesquisar" />
+        android:hint="Digite algum termo para pesquisar"
+        android:textColor="@color/white"/>
 
     <RadioGroup
         android:id="@+id/tipoTransacao"
@@ -23,14 +25,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Crédito" />
+            android:text="Crédito"
+            android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/peloTipoDebito"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Débito" />
+            android:text="Débito"
+            android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/peloTipoTodos"
@@ -38,7 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             android:checked="true"
-            android:text="Todas" />
+            android:text="Todas"
+            android:textColor="@color/white"/>
     </RadioGroup>
     <RadioGroup
         android:id="@+id/tipoPesquisa"
@@ -51,14 +56,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Data" />
+            android:text="Data"
+            android:textColor="@color/white"/>
 
         <RadioButton
             android:id="@+id/peloNumeroConta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
-            android:text="Número da Conta" />
+            android:text="Número da Conta"
+            android:textColor="@color/white"/>
     </RadioGroup>
 
 
@@ -67,7 +74,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:text="Pesquisar" />
+        android:text="Pesquisar"
+        android:background="@color/purple"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvResultado"

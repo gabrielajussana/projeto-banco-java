@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:background="@color/newBlack">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Número da Conta"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/numero"
@@ -20,13 +22,15 @@
         android:fontFamily="sans-serif-light"
         android:hint="Digite o número da conta"
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Nome"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/nome"
@@ -36,13 +40,15 @@
         android:fontFamily="sans-serif-light"
         android:hint="Digite um nome"
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CPF"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
     <EditText
         android:id="@+id/cpf"
         android:layout_width="match_parent"
@@ -52,13 +58,16 @@
         android:hint="Digite um CPF"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Saldo"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:textColor="@color/white"/>
 
     <EditText
         android:id="@+id/saldo"
@@ -69,7 +78,8 @@
         android:fontFamily="sans-serif-light"
         android:hint="Digite o saldo"
         android:minHeight="48dp"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@color/white"/>
 
     <Button
         android:id="@+id/btnAtualizar"
